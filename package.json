@@ -1,0 +1,23 @@
+{
+  "name": "cli-cypher",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "src/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@neo4j-cypher/antlr4": "^1.0.0",
+    "@neo4j-cypher/editor-support": "^1.0.1",
+    "@neo4j-cypher/react-codemirror": "^1.0.3",
+    "antlr4": "4.10.1",
+    "react": "^18.2.0"
+  }
+}
