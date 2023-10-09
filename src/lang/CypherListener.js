@@ -1,4 +1,4 @@
-// Generated from src/Cypher.g4 by ANTLR 4.10.1
+// Generated from src/lang/Cypher.g4 by ANTLR 4.10.1
 // jshint ignore: start
 import antlr4 from 'antlr4';
 
