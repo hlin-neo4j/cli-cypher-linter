@@ -5,5 +5,8 @@ Leverages the grammar and antlr4 source code from the cypher-editor (https://git
 `npm run start`
 Then enter a cypher query lint check it.
 
+# To check a cypher file:
+`npm run start path/to/cypherFile.cyp`
+
 # Antlr
 (Credit to cypher-editor) To generate the antlr lexer and parser files, run `npm run generate`.

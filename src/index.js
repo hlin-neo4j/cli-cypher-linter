@@ -3,39 +3,55 @@
 import {CypherParser, CypherLexer} from './lang/index.js'
 import antlr4 from 'antlr4'
 import { createInterface } from 'readline';
+import fs from 'fs/promises'
+import { exit } from 'process';
 
 async function main() {
-  while (true) {
-    const qry = await readlineAsync("Enter a Cypher query (empty to exit) > ");
-    if (qry === '') {
+  if (process.argv.length === 2) {
+    // PROMPT
+    while (true) {
+      const qry = await readlineAsync("Enter a Cypher query (empty to exit) > ");
+      runEvaluation(qry);
       rl.close();
-      break;
     }
-    const errorListener = new MyErrorListener();
-    const chars = new antlr4.InputStream(qry);
-    const lexer = new CypherLexer(chars)
-    lexer.removeErrorListeners();
-    lexer.addErrorListener(errorListener);
-    
-    const tokens = new antlr4.CommonTokenStream(lexer);
-    const parser = new CypherParser(tokens);
-    parser.buildParseTrees = true;
-    
-    parser.removeErrorListeners();
-    parser.addErrorListener(errorListener);
-    const parseTree = parser.cypher()
-    
-    console.log('\n\n\n');
-    if (!errorListener.errors || !errorListener.errors.length) {
-      console.log('Syntax checks out!');
-      continue;
-    }
-    
-    for (let error of errorListener.errors) {
-        console.log(error.msg);
-        console.log('\n')
-    }
+  } else {
+    // FILE
+    const filepath = process.argv[2];
+    const data = await fs.readFile(filepath, { encoding: 'utf8' });
+    runEvaluation(data);
   }
+
+  exit(0);
+}
+
+function runEvaluation(qry) {
+  if (qry === '') {
+    console.log('Empty string')
+    return;
+  }
+  
+  const errorListener = new MyErrorListener();
+  const chars = new antlr4.InputStream(qry);
+  const lexer = new CypherLexer(chars)
+  lexer.removeErrorListeners();
+  lexer.addErrorListener(errorListener);
+  
+  const parser = new CypherParser(new antlr4.CommonTokenStream(lexer));
+  parser.buildParseTrees = true;
+  
+  parser.removeErrorListeners();
+  parser.addErrorListener(errorListener);
+  const parseTree = parser.cypher()
+  
+  if (!errorListener.errors || !errorListener.errors.length) {
+    console.log('No errors');
+    return;
+  }
+  
+  // for (let error of errorListener.errors) {
+  //     // console.log(error.msg);
+  //     console.log('\n')
+  // }
 }
 
 const rl = createInterface({
